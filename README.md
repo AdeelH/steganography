@@ -1,4 +1,4 @@
-Allows hiding binary data in an image, the data is broken into bit-chunks of the specified size and each chunk is stored in the least significant bits of each byte of the image.
+Allows hiding binary data in an image. The data is broken into bit-chunks of the specified size and each chunk is stored in the least significant bits of each byte of the image.
 
 The reverse operation extracts the data from the image and restores it to a file.
 
