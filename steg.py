@@ -22,9 +22,9 @@ def prepare_data(data, fsize, bits):
 
 
 if __name__ == '__main__':
-	if len(sys.argv[1:]) < 3:
+	if len(sys.argv[1:]) < 4:
 		print('\nError: insufficient number of arguments.\n')
-		print('Usage: python steg.py <input-file> <image> <data-bits-per-byte>\n')
+		print('Usage: python steg.py <input-file> <input-image> <data-bits-per-byte> <output-image>\n')
 		exit()
 	fname, img_in, bits, img_out = sys.argv[1:]
 
