@@ -26,21 +26,31 @@ if __name__ == '__main__':
 		print('\nError: insufficient number of arguments.\n')
 		print('Usage: python steg.py <input-file> <input-image> <data-bits-per-byte> <output-image>\n')
 		exit()
-	fname, img_in, bits, img_out = sys.argv[1:]
+	# read in command line args
+	filename, img_in, bits, img_out = sys.argv[1:]
 
+	# # of bits per byte of the image that will be overwritten
 	bits = int(bits)
+	# load image into a numpy array
 	img = np.array(Image.open(img_in), dtype=np.uint8)
-	fsize = stat(fname).st_size
-	fdata = np.fromfile(fname, dtype=np.uint8)
+	# read binary data from file into a numpy array
+	fdata = np.fromfile(filename, dtype=np.uint8)
+	fsize = fdata.size
 
+	# sanity checks
 	assert 0 < bits <= 8
 	assert 2 <= img.ndim <= 3
-	assert len(fdata) == fsize
 	assert ceil(8 * (fsize) / bits) + ceil(32 / bits) <= img.size
 
-	print('Hiding contents of {} ({} bytes) in {} ...'.format(fname, fsize, img_in))
+	print('Hiding contents of {} ({} bytes) in {} ...'.format(filename, fsize, img_in))
 
-	stegged = steg(img, prepare_data(fdata, fsize, bits), bits)
+	# break into bit-chunks; also include the data size
+	data = prepare_data(fdata, fsize, bits)
+
+	# apply steganography
+	stegged = steg(img, data, bits)
+
+	# save modified image
 	Image.fromarray(stegged).save(img_out)
 
 	print('Done.\nNew image: {}'.format(img_out))

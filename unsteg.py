@@ -7,8 +7,11 @@ from common import *
 
 
 def unsteg(img, bits):
+	# set non-data bits to zero
 	mask = int(''.join(['0'] * (8 - bits) + ['1'] * bits), 2)
-	chunks = np.nditer(img & mask)
+	data = img & mask
+
+	chunks = np.nditer(data)
 
 	# extract the size in bytes of the hidden data
 	dsize_bytes = chunks_to_bytes(islice(chunks, ceil(32 / bits)), bits)
@@ -31,17 +34,24 @@ if __name__ == '__main__':
 		print('\nError: insufficient number of arguments.\n')
 		print('Usage: python unsteg.py <image> <data-bits-per-byte> <output-file>\n')
 		exit()
+	# read in command line args
 	img_in, bits, fout = sys.argv[1:]
 
+	# # of bits per byte of the image containing data
 	bits = int(bits)
+	# load image into a numpy array
 	img = np.array(Image.open(img_in), dtype=np.uint8)
 
+	# sanity checks
 	assert 0 < bits <= 8
 	assert 2 <= img.ndim <= 3
 
 	print('Extracting hidden data from {} ... '.format(img_in))
 
+	# extract data
 	data = unsteg(img, bits)
+
+	# save data to a file
 	data.tofile(fout)
 
 	print('Done.\nData saved to: {} '.format(fout))
