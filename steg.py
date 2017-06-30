@@ -1,7 +1,6 @@
 from itertools import chain
 from struct import pack
 import numpy as np
-from os import stat
 from PIL import Image
 import sys
 from math import ceil
